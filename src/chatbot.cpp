@@ -27,6 +27,7 @@ ChatBot::ChatBot(std::string filename)
     _rootNode = nullptr;
 
     // load image into heap memory
+    std::cout << filename;
     _image = new wxBitmap(filename, wxBITMAP_TYPE_PNG);
 }
 
@@ -44,6 +45,84 @@ ChatBot::~ChatBot()
 
 //// STUDENT CODE
 ////
+
+// --- rule of five:
+// i) destructor (defined above)
+// ii) (deep) copy constructor
+ChatBot::ChatBot(const ChatBot& chatbot)
+{
+    std::cout << "ChatBot Copy Constructor" << std::endl;
+    _image = new wxBitmap();
+    *_image = *chatbot._image;
+    _chatLogic = chatbot._chatLogic;
+    _chatLogic->SetChatbotHandle(this);
+    _currentNode = chatbot._currentNode;
+    _rootNode = chatbot._rootNode;
+}
+
+// iii) assignment operator (copy semantics)
+ChatBot& ChatBot::operator= (const ChatBot& chatbot)
+{
+    std::cout << "ChatBot Copy Assignment Operator" << std::endl;
+
+    // Check for self-assignment
+    if (&chatbot == this)
+        return *this;
+
+    if(_image != NULL) // Attention: wxWidgets used NULL and not nullptr
+        delete _image;
+
+    _image = new wxBitmap();
+    *_image = *chatbot._image;
+    _chatLogic = chatbot._chatLogic;
+    _chatLogic->SetChatbotHandle(this);
+    _currentNode = chatbot._currentNode;
+    _rootNode = chatbot._rootNode;
+    return *this;
+}
+
+// iv) move constructor
+ChatBot::ChatBot(ChatBot&& chatbot)
+{
+    std::cout << "ChatBot Move Constructor" << std::endl;
+
+    _image = chatbot._image;
+    _chatLogic = chatbot._chatLogic;
+    _chatLogic->SetChatbotHandle(this);
+    _currentNode = chatbot._currentNode;
+    _rootNode = chatbot._rootNode;
+
+    chatbot._image = NULL;
+    chatbot._chatLogic = nullptr;
+    chatbot._currentNode = nullptr;
+    chatbot._rootNode = nullptr;
+}
+
+// v) assignment operator (move semantics)
+ChatBot& ChatBot::operator= (ChatBot&& chatbot)
+{
+    std::cout << "ChatBot Move Assignment Operator" << std::endl;
+
+    // Check for self-assignment
+    if (&chatbot == this)
+        return *this;
+
+    if(_image != NULL) // Attention: wxWidgets used NULL and not nullptr
+        delete _image;
+
+    _image = chatbot._image;
+    _chatLogic = chatbot._chatLogic;
+    _chatLogic->SetChatbotHandle(this);
+    _currentNode = chatbot._currentNode;
+    _rootNode = chatbot._rootNode;
+
+    chatbot._image = NULL;
+    chatbot._chatLogic = nullptr;
+    chatbot._currentNode = nullptr;
+    chatbot._rootNode = nullptr;
+
+    return *this;
+}
 
 ////
 //// EOF STUDENT CODE

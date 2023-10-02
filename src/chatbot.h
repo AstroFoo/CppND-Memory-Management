@@ -30,6 +30,17 @@ public:
     //// STUDENT CODE
     ////
 
+    // --- rule of five:
+    // i) destructor (defined above)
+    // ii) (deep) copy constructor
+    ChatBot(const ChatBot& chatbot);
+    // iii) assignment operator (copy semantics)
+    ChatBot& operator= (const ChatBot& chatbot);
+    // iv) move constructor
+    ChatBot(ChatBot&&);
+    // v) assignment operator (move semantics)
+    ChatBot& operator= (ChatBot&& chatbot);
+
     ////
     //// EOF STUDENT CODE
 
